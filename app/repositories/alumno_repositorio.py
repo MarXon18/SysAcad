@@ -31,6 +31,10 @@ class AlumnoRepository:
         :return: Lista de alumno.
         """
         return db.session.query(Alumno).all()
+
+    @staticmethod
+    def get_by_id(alumno_id):
+        return db.session.get(Alumno, alumno_id)
     
     @staticmethod
     def actualizar_alumno(alumno) -> Alumno:
