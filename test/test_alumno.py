@@ -5,6 +5,7 @@ from app.models.alumno import Alumno
 import os
 from app.models.documento import Documento
 from app.services.alumno_service import AlumnoService
+import io
 from app import db
 
 class AppTestCase(unittest.TestCase):
@@ -20,7 +21,7 @@ class AppTestCase(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
-
+        
     def test_alumno_creation(self):
         alumno = self.__nuevoalumno()
         self.assertIsNotNone(alumno)
@@ -50,6 +51,7 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(r.nro_documento, "12345678")
         self.assertEqual(r.nro_legajo, 1234)
 
+
     def test_buscar_alumno(self):
         alumno1 = self.__nuevoalumno()
         alumno2 = self.__nuevoalumno()
@@ -72,6 +74,29 @@ class AppTestCase(unittest.TestCase):
         AlumnoService.borrar_por_id(alumno.id)
         resultado = AlumnoService.borrar_por_id(alumno.id)
         self.assertIsNone(resultado)
+        
+    def test_ficha_alumno_json(self):
+        alumno = __nuevoalumno()
+        AlumnoService.crear_alumno(alumno)
+
+        ficha = AlumnoService.obtener_ficha(alumno.id, formato="json")
+
+        self.assertIsNotNone(ficha)
+        self.assertEqual(ficha["apellido"], "Silva")
+        self.assertEqual(ficha["nombre"], "Abril")
+        self.assertEqual(ficha["nro_legajo"], 1234)
+        self.assertIn("facultad", ficha)
+        
+    def test_ficha_alumno_pdf(self):
+        alumno = self.__nuevoalumno()
+        AlumnoService.crear_alumno(alumno)
+
+        pdf_bytes = AlumnoService.obtener_ficha(alumno.id, formato="pdf")
+
+        self.assertIsNotNone(pdf_bytes)
+        self.assertIsInstance(pdf_bytes, bytes)
+
+        self.assertTrue(pdf_bytes.startswith(b"%PDF"))
 
     def __nuevoalumno(self):
         alumno = Alumno()
@@ -86,6 +111,7 @@ class AppTestCase(unittest.TestCase):
         alumno.fecha_ingreso = '2022-01-01'
         return alumno
         
+
 
 if __name__ == '__main__':
     unittest.main()
