@@ -11,3 +11,4 @@ from .cargo_mapping import CargoMapping
 from .alumno_mapping import AlumnoMapping
 from .nota_mapping import NotaMapping
 from .materia_mapping import MateriaMapping
+from .autoridad_mapping import Autoridad
