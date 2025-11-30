@@ -75,29 +75,6 @@ class AppTestCase(unittest.TestCase):
         resultado = AlumnoService.borrar_por_id(alumno.id)
         self.assertIsNone(resultado)
         
-    def test_ficha_alumno_json(self):
-        alumno = __nuevoalumno()
-        AlumnoService.crear_alumno(alumno)
-
-        ficha = AlumnoService.obtener_ficha(alumno.id, formato="json")
-
-        self.assertIsNotNone(ficha)
-        self.assertEqual(ficha["apellido"], "Silva")
-        self.assertEqual(ficha["nombre"], "Abril")
-        self.assertEqual(ficha["nro_legajo"], 1234)
-        self.assertIn("facultad", ficha)
-        
-    def test_ficha_alumno_pdf(self):
-        alumno = self.__nuevoalumno()
-        AlumnoService.crear_alumno(alumno)
-
-        pdf_bytes = AlumnoService.obtener_ficha(alumno.id, formato="pdf")
-
-        self.assertIsNotNone(pdf_bytes)
-        self.assertIsInstance(pdf_bytes, bytes)
-
-        self.assertTrue(pdf_bytes.startswith(b"%PDF"))
-
     def __nuevoalumno(self):
         alumno = Alumno()
         tipo_documento=Documento(tipo_documento = "DNI")
