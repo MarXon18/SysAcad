@@ -3,8 +3,8 @@ from app.models import TipoDedicacion
 
 class TipoDedicacionMapping(Schema):
     hashid = fields.String(dump_only=True)
-    nombre = fields.String(required=True, validate=validate.Length(min=1, max=100))
-    observacion = fields.String(validate=validate.Length(min=1, max=255))
+    nombre = fields.String(required=True, validate=validate.Length(min=1, max=50))
+    observacion = fields.String(allow_none=True, validate=validate.Length(min=1, max=100))
 
     @post_load
     def nuevo_tipo_dedicacion(self, data, **kwargs):

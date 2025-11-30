@@ -6,6 +6,6 @@ class CategoriaCargoMapping(Schema):
     nombre = fields.String(required = True, validate = validate.Length(min = 1, max = 50))
 
     @post_load
-    def make_categoria_cargo(self, data, **kwargs):
+    def nuevo_categoria_cargo(self, data, **kwargs):
         return CategoriaCargo(**data)
 
