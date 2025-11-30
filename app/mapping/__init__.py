@@ -9,3 +9,5 @@ from .tipoespecialidad_mapping import TipoEspecialidadMapping
 from .plan_mapping import PlanMapping
 from .cargo_mapping import CargoMapping
 from .alumno_mapping import AlumnoMapping
+from .nota_mapping import NotaMapping
+from .materia_mapping import MateriaMapping
