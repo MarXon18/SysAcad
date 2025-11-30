@@ -4,7 +4,7 @@ from app.models import Alumno
 class AlumnoMapping(Schema):
     hashid = fields.String(dump_only=True)
     nombre = fields.String(required=True, validate=validate.Length(min=1, max=50))
-    apellido = fields.Str(required=True, validate=validate.Length(min=1, max=50))
+    apellido = fields.String(required=True, validate=validate.Length(min=1, max=50))
     fecha_nacimiento = fields.Date(required=True)
     nro_documento = fields.String(required=True, validate=validate.Length(min=1, max=50))
     sexo = fields.String(required=True, validate=validate.Length(equal=1))
