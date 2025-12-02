@@ -1,18 +1,3 @@
-'''from dataclasses import dataclass
-from app.models.facultad import Facultad
-from app.models.cargo import Cargo
-from app import db
-
-
-@dataclass(init=False, repr=True, eq=True)
-class Autoridad(db.Model):
-    __tablename__ = 'autoridades'
-    id: int = db.Column(db.Integer, primary_key=True)
-    nombre: str = db.Column(db.String(50),nullable=False)
-    cargo: Cargo = db.relationship('Cargo',lazy=True)
-    telefono: str = db.Column(db.String(20),nullable=False)
-    email: str = db.Column(db.String(50), nullable=False)
-'''
 from dataclasses import dataclass
 from app.models.facultad import Facultad
 from app.models.cargo import Cargo
