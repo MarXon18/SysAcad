@@ -1,9 +1,9 @@
 from marshmallow import Schema, fields, post_load, validate
 from app.models.materia import Materia
-from app.mapping.nota_mapping import NotaMapping 
+from markupsafe import escape
 
 class MateriaMapping(Schema):
-    hashid= fields.String(dump_only=True)
+    id= fields.Integer(dump_only=True)
     nombre= fields.String(required=True, validate=validate.Length(min=1, max=100))
     codigo= fields.String(required=True, validate=validate.Length(min=1, max=100))
     observacion = fields.String(required=True, validate=validate.Length(min=1, max=100))
@@ -12,4 +12,7 @@ class MateriaMapping(Schema):
 
     @post_load
     def nueva_materia(self,data, **kwargs):
+        for key in ['nombre', 'codigo','observacion']:
+            if key in data and isinstance(data[key],str):
+                data[key]= escape(data[key])
         return Materia(**data)

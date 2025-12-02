@@ -12,3 +12,7 @@ from .alumno_mapping import AlumnoMapping
 from .nota_mapping import NotaMapping
 from .materia_mapping import MateriaMapping
 from .autoridad_mapping import Autoridad
+from .documento_mapping import Documento
+from .especialidad_mapping import Especialidad
+from .facultad_mapping import Facultad
+from .orientacion_mapping import Orientacion
