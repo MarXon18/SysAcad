@@ -5,7 +5,7 @@ from markupsafe import escape
 class GrupoMapping(Schema):
     id= fields.Integer(dump_only=True)
     nombre = fields.String(required=True, validate=validate.Length(min=1, max=100))
-    #grado_id = fields.Integer(allow_none=True)
+    grado_id = fields.Int(allow_none=True)
 
     @post_load
     def nuevo_grupo(self, data, **kwargs) :

@@ -5,7 +5,7 @@ from markupsafe import escape
 class DepartamentoMapping(Schema):
     hashids = fields.String(attribute="hashid",dump_only=True)
     nombre = fields.String(required=True, validate=validate.Length(min=1, max=100))
-   # orientacion_id = fields.Integer(allow_none=True)
+    orientacion_id = fields.Integer(allow_none=True)
 
     @post_load
     def nuevo_departamento(self, data, **kwargs):
