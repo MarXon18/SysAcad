@@ -1,5 +1,6 @@
 import unittest
 import os
+from dataclasses import asdict
 from flask import current_app
 from app import create_app
 from app.models.facultad import Facultad
@@ -67,6 +68,15 @@ class FacultadTestCase(unittest.TestCase):
         FacultadService.borrar_por_id(facultad.id)
         resultado = FacultadService.borrar_por_id(facultad.id)
         self.assertIsNone(resultado)
+
+     def test_mapping_facultad(self):
+        facultad = self.__nuevafacultad()
+        data = asdict(facultad)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(data['nombre'], "Facultad de Ciencias")
+        self.assertEqual(data['sigla'], "FC")
+        self.assertEqual(data['email'], "1234@gmail.com")
+        self.assertIn('telefono', data)
     
     def __nuevafacultad(self):
         facultad = Facultad()
@@ -84,3 +94,4 @@ class FacultadTestCase(unittest.TestCase):
     
 if __name__ == '__main__':
     unittest.main()
+
