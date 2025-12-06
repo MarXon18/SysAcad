@@ -1,6 +1,7 @@
 from asyncio.log import logger
 from dotenv import load_dotenv
 from pathlib import Path
+from sqlalchemy.pool import NullPool
 import os
 
 basedir = os.path.abspath(Path(__file__).parents[2])
@@ -20,6 +21,9 @@ class TestConfig(Config):
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URI')
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'poolclass': NullPool
+    }
     
 class DevelopmentConfig(Config):
     TESTING = True
@@ -33,11 +37,7 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     SQLALCHEMY_RECORD_QUERIES = False
-    user = os.environ.get('USER_DB')
-    password = os.environ.get('PASSWORD_DB')
-    host = os.environ.get('HOST_DB')
-    db_name = os.environ.get('NAME_DB')
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{user}:{password}@{host}/{db_name}"
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URI')
     
     @classmethod
     def init_app(cls, app):
