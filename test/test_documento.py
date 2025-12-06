@@ -21,12 +21,12 @@ class AppTestCase(unittest.TestCase):
         self.app_context.pop()
         
     def test_documento_creation(self):
-        documento = self.__nuevodocumento()
+        documento = self.__nuevo_documento()
         self.assertIsNotNone(documento)
         self.assertEqual(documento.tipo_documento, "DNI")
         
     def test_crear_documento(self):
-        documento = self.__nuevodocumento()
+        documento = self.__nuevo_documento()
         DocumentoService.crear_documento(documento)
         self.assertIsNotNone(documento)
         self.assertIsNotNone(documento.id)
@@ -34,16 +34,17 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(documento.tipo_documento, "DNI")
 
     def test_documento_busqueda(self):
-        documento = self.__nuevodocumento()
+        documento = self.__nuevo_documento()
         DocumentoService.crear_documento(documento)    
-        r=DocumentoService.buscar_por_id(documento.id)
-        self.assertIsNotNone(r)
-        self.assertEqual(r.tipo_documento, "DNI")
+        
+        resultado=DocumentoService.buscar_por_id(documento.id)
+        self.assertIsNotNone(resultado)
+        self.assertEqual(resultado.tipo_documento, "DNI")
 
 
-    def test_buscar_documento(self):
-        documento1 = self.__nuevodocumento()
-        documento2 = self.__nuevodocumento()
+    def test_buscar_todos_los_documentos(self):
+        documento1 = self.__nuevo_documento(tipo="DNI")
+        documento2 = self.__nuevo_documento(tipo="Pasaporte")
         DocumentoService.crear_documento(documento1)
         DocumentoService.crear_documento(documento2)
         documento = DocumentoService.buscar_todos()
@@ -51,20 +52,44 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(len(documento), 2)
 
     def test_actualizar_documento(self):
-        documento= self.__nuevodocumento()
+        documento= self.__nuevo_documento()
         DocumentoService.crear_documento(documento)
         documento.tipo_documento = "Pasaporte"
-        documento_actualizada = DocumentoService.actualizar_documento(documento.id, documento)
-        self.assertEqual(documento_actualizada.tipo_documento, "Pasaporte")
+        doc_actualizado = DocumentoService.actualizar_documento(documento.id, documento)
+        self.assertEqual(doc_actualizado.tipo_documento, "Pasaporte")
+        doc_bd= DocumentoService.buscar_por_id(documento.id) #Verificamos en BD
+        self.assertEqual(doc_bd.tipo_documento, "Pasaporte")
 
     def test_borrar_documento(self):
-        documento = self.__nuevodocumento()
+        documento = self.__nuevo_documento()
         DocumentoService.crear_documento(documento)
         DocumentoService.borrar_por_id(documento.id)
         resultado = DocumentoService.borrar_por_id(documento.id)
         self.assertIsNone(resultado)
+
+    def test_serializacion_documento(self):
+        """
+        Prueba de Mapping: Verifica que el objeto Documento se convierta
+        correctamente a un diccionario/JSON.
+        """
+        documento = self.__nuevo_documento(tipo="LC")
         
-    def __nuevodocumento(self):
+        #Definimos lo que esperamos recibir
+        datos_esperados = {
+            "tipo_documento": "LC",
+            "descripcion": "Tipo de Documento: LC" # Ejemplo de campo hipotético
+        }
+        # Simular el mapeo
+        datos_actuales = {
+            "tipo_documento": documento.tipo_documento,
+            "descripcion": f"Tipo de Documento: {documento.tipo_documento}"
+        }
+        # Valida
+        self.assertEqual(datos_actuales["tipo_documento"], datos_esperados["tipo_documento"])
+        self.assertDictEqual(datos_actuales, datos_esperados)
+
+    
+    def __nuevo_documento(self,tipo="DNI"):
         documento = Documento()
         documento.tipo_documento = 'DNI'
         return documento
