@@ -1,23 +1,50 @@
-from marshmallow import Schema, fields, post_load, validate
+from marshmallow import Schema, fields, post_load, validate, EXCLUDE
 from app.models.facultad import Facultad
-from markupsafe import escape
 
-class FacultadMapping(Schema):
-    id = fields.Integer(dump_only=True)
-    nombre = fields.String(required=True, validate=validate.Length(min=1, max=100))
-    abreviatura = fields.String(required=True, validate=validate.Length(min=1, max=10))
-    directorio= fields.String(required=True, validate=validate.Length(min=1, max=100))
-    sigla = fields.String(required=True, validate=validate.Length(min=1, max=10))
-    codigo_postal= fields.String(required=True, validate=validate.Length(min=1, max=10))
-    ciudad = fields.String(required=True, validate=validate.Length(min=1, max=50))
-    domicilio= fields.String(required=True, validate=validate.Length(min=1, max=100))
-    telefono= fields.String(required=True, validate=validate.Length(min=1, max=20))
-    contacto=fields.String(required=True, validate=validate.Length(min=1, max=100))
-    email= fields.String(required=True, validate=validate.Length(min=1, max=100))
+class FacultadSchema(Schema):
+    class Meta:
+        # Si el microservicio agrega campos nuevos en el futuro, no rompemos la app
+        unknown = EXCLUDE
+
+    # --- Identificadores ---
+    id = fields.Int(dump_only=True) # Generalmente no insertamos el ID, lo genera la DB
+    
+    # --- Datos Principales ---
+    # data_key conecta el JSON 'facultyName' con el modelo 'nombre'
+    nombre = fields.Str(required=True, data_key="facultyName", validate=validate.Length(max=100))
+    abreviatura = fields.Str(required=True, data_key="shortName", validate=validate.Length(max=10))
+    sigla = fields.Str(required=True, data_key="acronym", validate=validate.Length(max=10))
+    directorio = fields.Str(required=True, data_key="path", validate=validate.Length(max=100))
+    
+    # --- Ubicación (Opcionales en DB,pero necesarios en los mapping)
+    codigo_postal = fields.Str(allow_none=True, data_key="zipCode", validate=validate.Length(max=10))
+    ciudad = fields.Str(allow_none=True, validate=validate.Length(max=50))
+    domicilio = fields.Str(allow_none=True, data_key="address", validate=validate.Length(max=100))
+    
+    # --- Contacto ---
+    telefono = fields.Str(allow_none=True, data_key="phoneNumber", validate=validate.Length(max=20))
+    contacto = fields.Str(allow_none=True, data_key="contactPerson", validate=validate.Length(max=100))
+    
+    # Validación automática de formato de email
+    email = fields.Email(required=True, data_key="emailAddress", validate=validate.Length(max=100))
 
     @post_load
-    def nueva_facultad(self, data, **kwargs):
-        for key in ['nombre', 'abreviatura', 'directorio', 'sigla', 'codigo_postal', 'ciudad','domicilio','telefono','contacto', 'email']:
-            if key in data:
-                data[key] = escape(data[key])
+    def make_facultad(self, data, **kwargs):
+        """
+        Convierte el diccionario validado en una instancia de Facultad.
+        """
         return Facultad(**data)
+
+class FacultadMapper:
+    @staticmethod
+    def from_json(json_data: dict) -> Facultad:
+        schema = FacultadSchema()
+        return schema.load(json_data)
+
+    @staticmethod
+    def to_json(facultad: Facultad) -> dict:
+        """
+        Útil si app  de flask también expone estos datos a un Frontend
+        """
+        schema = FacultadSchema()
+        return schema.dump(facultad)
