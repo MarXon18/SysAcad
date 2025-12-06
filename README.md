@@ -13,7 +13,8 @@ SysAcad es una API REST de gestión académica construida con **Flask**, **SQLAl
 - Joaquín Moliterno
 - (iA) ChatGPT
 - (iA) Copilot
-
+##Microservicio Alumno
+- https://github.com/MarXon18/ms-alumno
 ## Requerimientos
 - Python 3.10+
 - PostgreSQL 13+
