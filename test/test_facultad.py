@@ -45,7 +45,6 @@ class FacultadTestCase(unittest.TestCase):
         self.assertEqual(r.nombre, "Facultad de Ciencias")
         self.assertEqual(r.abreviatura, "FCC")
 
-
     def test_buscar_facultades(self):
         facultad1 = self.__nuevafacultad()
         facultad2 = self.__nuevafacultad()
@@ -66,10 +65,10 @@ class FacultadTestCase(unittest.TestCase):
         facultad = self.__nuevafacultad()
         FacultadService.crear_facultad(facultad)
         FacultadService.borrar_por_id(facultad.id)
-        resultado = FacultadService.borrar_por_id(facultad.id)
+        resultado = FacultadService.buscar_por_id(facultad.id)
         self.assertIsNone(resultado)
 
-     def test_mapping_facultad(self):
+    def test_mapping_facultad(self):
         facultad = self.__nuevafacultad()
         data = asdict(facultad)
         self.assertIsInstance(data, dict)
@@ -94,4 +93,3 @@ class FacultadTestCase(unittest.TestCase):
     
 if __name__ == '__main__':
     unittest.main()
-
