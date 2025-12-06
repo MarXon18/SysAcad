@@ -16,7 +16,7 @@ class FacultadSchema(Schema):
     sigla = fields.Str(required=True, data_key="acronym", validate=validate.Length(max=10))
     directorio = fields.Str(required=True, data_key="path", validate=validate.Length(max=100))
     
-    # --- Ubicación (Opcionales en DB,pero necesarios en los mapping)
+    # --- Ubicación (Opcionales en DB, pero quizás requeridos en el mapping si lo deseas) ---
     codigo_postal = fields.Str(allow_none=True, data_key="zipCode", validate=validate.Length(max=10))
     ciudad = fields.Str(allow_none=True, validate=validate.Length(max=50))
     domicilio = fields.Str(allow_none=True, data_key="address", validate=validate.Length(max=100))
@@ -44,7 +44,7 @@ class FacultadMapper:
     @staticmethod
     def to_json(facultad: Facultad) -> dict:
         """
-        Útil si app  de flask también expone estos datos a un Frontend
+        Útil si tu Flask app también expone estos datos a un Frontend
         """
         schema = FacultadSchema()
         return schema.dump(facultad)

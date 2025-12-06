@@ -3,7 +3,7 @@ from app.models.documento import Documento
 
 class DocumentoSchema(Schema):
     class Meta:
-        # Ignoramos campos desconocidos que vengan en el JSON
+        # Ignora campos desconocidos que vengan en el JSON
         unknown = EXCLUDE 
 
     # Mapeamos 'code' del JSON al 'id' de la entidad
@@ -28,4 +28,3 @@ class DocumentoMapper:
     def to_json(documento: Documento) -> dict:
         schema = DocumentoSchema()
         return schema.dump(documento)
-    
